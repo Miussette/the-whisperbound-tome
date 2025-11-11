@@ -1,0 +1,187 @@
+# Implementation Plan
+
+- [ ] 1. Set up project structure and core type definitions
+  - Create directory structure for components, generators, data, and utilities
+  - Define TypeScript interfaces for Spell, Sigil, Ritual, Incantation, IntentCategory
+  - Define ValidationResult, RevealTiming, Lexicon, and IntentCorpus types
+  - _Requirements: 2.1, 2.2, 2.3, 2.4_
+
+- [ ] 2. Create lexicon and intent corpus data files
+  - [ ] 2.1 Build curated word lexicon with 500-800 approved words
+    - Create JSON file with temporal, verb, noun, preposition, and adjective categories
+    - Ensure all words are archaic, mystical, or nature-based
+    - Exclude modern language and words coined after 1900
+    - _Requirements: 4.2, 4.4_
+  - [ ] 2.2 Create intent corpus with keywords, symbols, and ritual steps
+    - Define 8 intent categories: protection, revelation, binding, transformation, summoning, banishment, preservation, passage
+    - Populate each intent with 30-50 ritual steps, symbol sets, metaphors, and templates
+    - Ensure thematic coherence within each intent category
+    - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 3. Implement deterministic seed generation
+  - [ ] 3.1 Create SeedGenerator class with hash-based seeding
+    - Implement FNV-1a or similar hash algorithm for whisper text
+    - Combine whisper hash with intent category hash
+    - Create method for generating component-specific sub-seeds
+    - _Requirements: 3.1, 3.2, 3.5_
+  - [ ] 3.2 Write unit tests for seed determinism
+    - Test that identical whispers produce identical seeds
+    - Test that different whispers produce different seeds
+    - Test sub-seed generation consistency
+    - _Requirements: 3.1, 3.2_
+
+- [ ] 4. Implement input validation and intent classification
+  - [ ] 4.1 Create InputHandler class
+    - Implement whisper validation (1-500 characters, non-empty)
+    - Implement sanitization that preserves mystical punctuation
+    - Create atmospheric error messages for invalid input
+    - _Requirements: 1.1, 8.1, 8.2, 8.3, 8.4, 8.5_
+  - [ ] 4.2 Create IntentClassifier class
+    - Implement keyword matching against intent corpus
+    - Weight keywords by mystical significance
+    - Default to REVELATION for ambiguous whispers
+    - Generate intent signature for seeding
+    - _Requirements: 6.1, 6.2_
+  - [ ] 4.3 Write unit tests for input validation and classification
+    - Test validation edge cases (empty, too long, whitespace-only)
+    - Test intent classification accuracy with sample whispers
+    - Test sanitization preserves valid mystical characters
+    - _Requirements: 8.1, 8.2, 8.3, 6.1_
+
+- [ ] 5. Implement sigil generation
+  - [ ] 5.1 Create SigilGenerator class
+    - Implement symbol selection from intent-specific sets
+    - Create geometric pattern arrangements (circle, triangle, line, cross)
+    - Use Unicode symbols: ◯ ◆ ▽ △ ═ ║ ╱ ╲ ∴ ⋮ · — ∞ ⊙
+    - Ensure 3-7 lines with center alignment
+    - Use seed for deterministic symbol and pattern selection
+    - _Requirements: 2.2, 3.3, 6.2_
+  - [ ] 5.2 Write unit tests for sigil generation
+    - Test deterministic output for same seed and intent
+    - Test line count bounds (3-7 lines)
+    - Test symbol set correctness per intent
+    - Test visual balance and symmetry
+    - _Requirements: 2.2, 3.1, 6.2_
+
+- [ ] 6. Implement ritual sequence generation
+  - [ ] 6.1 Create RitualGenerator class
+    - Implement step selection from intent-specific corpus
+    - Use seed to deterministically choose 3-5 steps
+    - Order steps for thematic coherence
+    - Format as numbered list with minimal punctuation
+    - _Requirements: 2.3, 3.4, 6.3_
+  - [ ] 6.2 Write unit tests for ritual generation
+    - Test deterministic output for same seed and intent
+    - Test step count bounds (3-5 steps)
+    - Test thematic coherence of selected steps
+    - Test corpus selection correctness
+    - _Requirements: 2.3, 3.1, 6.3_
+
+- [ ] 7. Implement incantation generation
+  - [ ] 7.1 Create IncantationGenerator class
+    - Implement template-based composition with variable slots
+    - Select words from curated lexicon using seed
+    - Generate 2-4 lines with 8-12 syllables per line
+    - Enforce passive voice and indirect phrasing
+    - Incorporate silence markers (…, —, line breaks)
+    - Limit adjectives to one per noun phrase
+    - _Requirements: 2.4, 3.5, 4.1, 4.3, 4.4, 4.5, 6.4_
+  - [ ] 7.2 Create syllable counting utility
+    - Implement syllable counting algorithm for English words
+    - Validate incantation lines meet 8-12 syllable requirement
+    - _Requirements: 2.4_
+  - [ ] 7.3 Write unit tests for incantation generation
+    - Test deterministic output for same seed and intent
+    - Test line count bounds (2-4 lines)
+    - Test syllable count per line (8-12 syllables)
+    - Test tone constraints (no modern language, no exclamations)
+    - Test adjective density (max 1 per noun phrase)
+    - _Requirements: 2.4, 2.5, 4.1, 4.3, 4.4, 4.5_
+
+- [ ] 8. Implement spell assembly
+  - [ ] 8.1 Create SpellAssembler class
+    - Combine sigil, ritual, and incantation into Spell object
+    - Attach metadata (intent, timestamp, whisper hash)
+    - Validate all components are present and correctly formatted
+    - Return immutable spell object
+    - _Requirements: 2.1, 6.5_
+  - [ ] 8.2 Write integration tests for complete spell generation
+    - Test end-to-end whisper-to-spell pipeline
+    - Test spell structure completeness
+    - Test metadata accuracy
+    - Test determinism across full pipeline
+    - _Requirements: 2.1, 3.1, 6.5_
+
+- [ ] 9. Create presentation controller for UI reveal sequence
+  - [ ] 9.1 Implement PresentationController class
+    - Create transition state display (2-4 seconds)
+    - Implement sequential reveal: sigil → ritual → incantation
+    - Create character-by-character text reveal (40-60ms per character)
+    - Prevent input during reveal sequence
+    - _Requirements: 1.2, 1.3, 5.2_
+  - [ ] 9.2 Define reveal timing configuration
+    - Set transition delay (2000-4000ms)
+    - Set component reveal durations (sigil: 1000ms, ritual: 1500ms, incantation: 2000ms)
+    - Set character delay (40-60ms)
+    - _Requirements: 1.2, 5.2_
+
+- [ ] 10. Build minimal UI components
+  - [ ] 10.1 Create WhisperInput component
+    - Implement text input with 500 character limit
+    - Style with dark theme and minimal contrast
+    - Add slow hover feedback (300-500ms delay)
+    - Display atmospheric prompts and error messages
+    - _Requirements: 1.1, 5.3, 8.1, 8.5_
+  - [ ] 10.2 Create SpellDisplay component
+    - Implement sigil display with center alignment
+    - Implement ritual steps as numbered list
+    - Implement incantation with proper line breaks and silence markers
+    - Apply typography constraints (letter-spacing, line-height)
+    - _Requirements: 1.3, 1.4, 5.4_
+  - [ ] 10.3 Apply dark theme styling
+    - Set background colors (#0a0a0a to #1a1a1a)
+    - Set foreground colors (#8a8a8a to #b0b0b0)
+    - Ensure luminance values meet constraints (background <15%, foreground <70%)
+    - Use serif or monospace fonts
+    - Apply letter-spacing (0.05-0.15em) and line-height (1.6-2.0)
+    - _Requirements: 1.4, 5.5_
+  - [ ] 10.4 Implement animation system
+    - Create fade-in transitions (500-1500ms with easing)
+    - Implement character-by-character reveal animation
+    - Add hover state animations (300-500ms delay)
+    - Ensure all animations use ease-in-out or cubic-bezier
+    - _Requirements: 5.1, 5.2, 5.3_
+
+- [ ] 11. Wire components together into main application
+  - [ ] 11.1 Create main App component
+    - Connect WhisperInput to generation pipeline
+    - Pass generated spell to PresentationController
+    - Connect PresentationController to SpellDisplay
+    - Manage application state (idle, generating, revealing, complete)
+    - _Requirements: 1.1, 1.2, 1.3, 1.5_
+  - [ ] 11.2 Implement error handling throughout pipeline
+    - Handle input validation errors with atmospheric messages
+    - Default to REVELATION intent on classification failure
+    - Use fallback templates on generation errors
+    - Fall back to instant reveal on animation errors
+    - Never expose technical errors to user
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
+  - [ ] 11.3 Create end-to-end integration tests
+    - Test complete user flow from whisper input to spell reveal
+    - Test error handling paths
+    - Test state transitions
+    - Test input prevention during reveal
+    - _Requirements: 1.1, 1.2, 1.3, 1.5, 8.5_
+
+- [ ] 12. Create tone validation utilities
+  - [ ] 12.1 Implement automated tone checking
+    - Create validator for forbidden patterns (exclamations, all-caps, modern words)
+    - Create syllable counter validator (8-12 per line)
+    - Create adjective density checker (max 1 per noun phrase)
+    - Run validation on all generated content
+    - _Requirements: 2.5, 4.1, 4.2, 4.4_
+  - [ ] 12.2 Generate test spell corpus for manual review
+    - Generate 100 diverse spells across all intent categories
+    - Output to file for manual tone consistency review
+    - Document any tone violations found
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
